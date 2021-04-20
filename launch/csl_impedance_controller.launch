@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<launch>
+  <arg name="robot_ip" default="172.16.0.2" />
+  <arg name="load_gripper" default="true" />
+
+  <include file="$(find franka_control)/launch/franka_control.launch">
+    <arg name="robot_ip" value="$(arg robot_ip)" />
+    <arg name="load_gripper" value="$(arg load_gripper)" />
+  </include>
+  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="virtual_joint_broadcaster_1" args="0 0 0 0 0 0 world panda_link0" />  -->
+  <rosparam command="load" file="$(find franka_example_controllers)/config/franka_example_controllers.yaml" />
+  <rosparam command="load" file="$(find csl_controllers)/config/csl_controllers.yaml" />
+  <rosparam command="load" ns="franka_control" file="$(find csl_controllers)/config/collision_behaviour.yaml" />
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="position_joint_trajectory_controller"/>
+
+  <!-- <node name="ros_control_controller_manager" pkg="controller_manager" type="controller_manager" respawn="false" output="screen" args="load cartesian_impedance_example_controller" /> -->
+  <!-- <node name="ros_control_controller_manager_1" pkg="controller_manager" type="controller_manager" respawn="false" output="screen" args="load cartesian_velocity_example_controller" /> -->
+  <node name="ros_control_controller_manager_2" pkg="controller_manager" type="controller_manager" respawn="false" output="screen" args="load csl_impedance_controller" />
+  <include file="$(find panda_moveit_config)/launch/move_group.launch">
+    <arg name="load_gripper" value="$(arg load_gripper)" />
+  </include>
+  <!-- <node pkg="rviz" type="rviz" output="screen" name="rviz" args="-d $(find franka_example_controllers)/launch/rviz/franka_description_with_marker.rviz"/>
+  <node name="interactive_marker" pkg="franka_example_controllers" type="interactive_marker.py" required="true" output="screen">
+    <param name="link_name" value="panda_link0" />
+  </node> -->
+  <!-- <include file="$(find panda_moveit_config)/launch/moveit_rviz.launch" /> -->
+  <node pkg="rviz" type="rviz" output="screen" name="rviz" args="-d $(find franka_visualization)/launch/franka_visualization.rviz"/>
+</launch>

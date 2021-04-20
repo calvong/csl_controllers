@@ -1,0 +1,7 @@
+<library path="lib/libcsl_controllers">
+  <class name="csl_controllers/CSLImpedanceController" type="csl_controllers::CSLImpedanceController" base_class_type="controller_interface::ControllerBase">
+    <description>
+      A controller that executes a motion for CSL project
+    </description>
+  </class>
+</library>
